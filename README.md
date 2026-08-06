@@ -28,6 +28,76 @@ node --experimental-vm-modules --import tsx --test tests/*.test.ts
 npx tsc --noEmit
 ```
 
+## Usage
+
+### For neighbourhood creators
+
+#### 1. Run a server
+
+Deploy a [**link-server**](https://github.com/coasys/link-server) instance on your own hardware. One command gets you started:
+
+```bash
+npx @coasys/link-server --port 3457 --data ./my-data
+```
+
+See the [link-server README](https://github.com/coasys/link-server) for Docker setup, access control, federation, and encryption options.
+
+#### 2. Publish the language template (one time)
+
+Register the language code on the AD4M network. This only needs to happen once — after that, everyone reuses the same template address.
+
+```bash
+ad4m languages publish ./build/bundle.js \
+  --name server-link-language \
+  --description "Link language syncing through a self-hosted link-server" \
+  --possible-template-params SERVER_URL,ROOM_ID
+```
+
+This returns a **template address** (content hash). Save it — you need it in the next step.
+
+If someone else already published the template, skip this step and use their template address.
+
+#### 3. Create an instance pointing at your server
+
+Fill in the template with your server's URL and a room name of your choice:
+
+```bash
+ad4m languages apply-template-and-publish <template-address> \
+  '{"SERVER_URL": "https://your-server.example.com:3457", "ROOM_ID": "my-room"}'
+```
+
+This returns an **instantiated language address** — the template code with your server details baked in.
+
+#### 4. Create a neighbourhood
+
+```bash
+ad4m perspectives create                              # → perspective UUID
+ad4m neighbourhoods create <perspective-UUID> <instantiated-language-address>
+```
+
+This returns a **neighbourhood URL** (`neighbourhood://Qm...`). Share it with anyone you want to invite.
+
+Your agent — the first one to connect — automatically becomes the room's admin on the server.
+
+### For users joining a neighbourhood
+
+One command:
+
+```bash
+ad4m neighbourhoods join neighbourhood://Qm...
+```
+
+Everything else happens automatically:
+
+- The language code downloads (with the server URL and room ID already filled in)
+- Your agent authenticates with the server using your DID
+- All existing links pull down to your local store
+- A live connection opens for real-time updates
+
+No server address to type, no account to create, no configuration needed. The neighbourhood URL contains everything.
+
+Once joined, the neighbourhood works like any other. Links you create sync to the server and push to every connected agent in real time. Links from other agents appear as they arrive. If your connection drops, the language reconnects and catches up on anything it missed.
+
 ## The server this language talks to
 
 [`link-server`](https://github.com/coasys/link-server) — a
