@@ -63,6 +63,15 @@ const tsResolverPlugin = {
 const nobleResolverPlugin = {
     name: "noble-crypto-resolver",
     setup(build: any) {
+        // Force @noble/hashes/crypto to the browser/Deno entry point —
+        // the Node entry imports bare "crypto" which the Deno sandbox
+        // rejects. The browser entry uses globalThis.crypto (Web Crypto
+        // API) which Deno provides natively.
+        build.onResolve({ filter: /^@noble\/hashes\/crypto$/ }, (args: any) => {
+            const resolvedUrl = import.meta.resolve("@noble/hashes");
+            const basePath = new URL(resolvedUrl).pathname.replace(/\/esm\/index\.js$/, "");
+            return { path: `${basePath}/esm/crypto.js`, namespace: "file" };
+        });
         build.onResolve({ filter: /^@noble\// }, (args: any) => {
             const resolvedUrl = import.meta.resolve(args.path);
             return { path: new URL(resolvedUrl).pathname, namespace: "file" };
