@@ -103,16 +103,24 @@ tests/*.test.ts                    — node:test + tsx, one file per pure module
   rotation flow would need to detect a version bump (e.g. periodic
   `/keys` re-fetch, or a dedicated WS push message not in the current
   server API) and re-key in place.
-- **Wire-format assumptions need reconciling against the real server.**
-  `adam-link-server` did not exist yet (empty repo) when this language was
-  built, so two shapes are this client's own documented convention rather
-  than a verified contract:
-  - `GET /rooms/:roomId/keys`'s `encryptedKey` string = `base64(JSON.stringify(SealedRoomKeyEnvelope))` — see `encodeSealedEnvelope`/`decodeSealedEnvelope` in `src/encryption.ts`.
-  - The auth flow's step-2 body gains an additive `x25519PublicKey` (hex) field — see `src/api.ts` `verifyChallenge` and `src/auth.ts`.
-  - `GET /rooms/:roomId/sync`'s `diffs[]` entries are accepted in EITHER a flat (`{additions, removals, revision?, sequence?}`) or nested (`{diff: {additions, removals}, revision?, sequence?}`) shape — see `normalizeSyncEntry` in `src/sync.ts`. Once the real server is available, confirm which shape it actually sends and consider tightening the type.
-  If the real server disagrees with any of these, the fix is localized to
-  `src/api.ts` (request/response shaping) and `src/encryption.ts` (envelope
-  framing) — the rest of the language doesn't need to change.
+- **E2E encryption has 5 confirmed incompatibilities with the server.**
+  Plaintext mode works end-to-end (verified by smoke test). E2E needs
+  reconciliation before production use:
+  1. Encrypted link format: server expects `data: { ciphertext, nonce }`,
+     client sends `encrypted: hex(nonce || ciphertext)`.
+  2. KDF: server uses `SHA-256(shared)`, client uses
+     `HKDF-SHA256(shared, salt, info, 32)`.
+  3. Key envelope: server returns parsed JSON object, client expects
+     base64-encoded string.
+  4. X25519 derivation: server derives from DID public key
+     (`edwardsToMontgomeryPub`), client derives from
+     `sha256(sign("adam-server-link-language:x25519-seed:v1"))` —
+     different keypairs entirely.
+  5. Key response format: server sends `encryptedKey: object`,
+     client expects `encryptedKey: string`.
+  Fixes localize to `src/api.ts` (response shaping) and
+  `src/encryption.ts` (envelope framing) — core sync logic stays
+  unchanged.
 - **`peers.remote()` and E2E setup are not covered by the automated test
   suite directly** (only indirectly, through `api.ts`/`encryption.ts` unit
   tests) — there's no `index.ts`-level integration test because `index.ts`
