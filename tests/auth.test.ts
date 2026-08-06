@@ -1,6 +1,6 @@
 /**
  * Tests for src/auth.ts — the DID challenge-response flow against a mock
- * adam-link-server, and token-expiry-driven refresh behaviour.
+ * link-server, and token-expiry-driven refresh behaviour.
  */
 
 import { describe, it } from "node:test";

@@ -1,7 +1,7 @@
-# ADAM Server Link Language
+# Server Link Language
 
 An [AD4M](https://ad4m.dev) link language that syncs a perspective through a
-self-hosted [**adam-link-server**](https://github.com/coasys/adam-link-server)
+self-hosted [**link-server**](https://github.com/coasys/link-server)
 instance — HTTP for auth, commit, and catch-up sync; a native WebSocket for
 real-time diff push, presence, and telepresence. Every AD4M link-language capability is implemented:
 `perspective-commit`, `perspective-sync`, `perspective-query`, `peers`, and
@@ -30,7 +30,7 @@ npx tsc --noEmit
 
 ## The server this language talks to
 
-[`adam-link-server`](https://github.com/coasys/adam-link-server) — a
+[`link-server`](https://github.com/coasys/link-server) — a
 self-hosted HTTP+WebSocket server. One "room" = one AD4M neighbourhood.
 
 ### HTTP
@@ -146,7 +146,7 @@ summary:
 
 The exact `encryptedKey` wire framing (base64(JSON) envelope) and the
 `x25519PublicKey` auth field are this **client's own documented convention**
-— `adam-link-server` didn't exist yet when this language was built. Both are
+— `link-server` didn't exist yet when this language was built. Both are
 isolated in `src/encryption.ts` / `src/api.ts` / `src/auth.ts` so they're
 easy to reconcile against the real server implementation later.
 
@@ -169,10 +169,10 @@ inert mode (logs and returns without attempting any network I/O).
 {
     "languagePath": "./build/bundle.js",
     "languageMeta": {
-        "name": "adam-server-link-language",
-        "description": "AD4M link language syncing through a self-hosted adam-link-server",
+        "name": "server-link-language",
+        "description": "AD4M link language syncing through a self-hosted link-server",
         "possibleTemplateParams": ["SERVER_URL", "ROOM_ID"],
-        "sourceCodeLink": "https://github.com/coasys/adam-server-link-language"
+        "sourceCodeLink": "https://github.com/coasys/server-link-language"
     }
 }
 ```

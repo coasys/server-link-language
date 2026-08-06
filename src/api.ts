@@ -1,6 +1,6 @@
 /**
  * Server HTTP client — thin, typed wrappers around every
- * adam-link-server REST endpoint. Pure module: takes the Transport
+ * link-server REST endpoint. Pure module: takes the Transport
  * singleton from adapters.ts (swappable for a mock in tests) and never
  * imports ad4m:host directly.
  */

@@ -1,4 +1,4 @@
-# AGENTS.md — adam-server-link-language
+# AGENTS.md — server-link-language
 
 Persistent, repo-scoped memory for this project. Update this file whenever
 an architectural decision, gotcha, or convention changes — it is the source
@@ -7,7 +7,7 @@ of truth reloaded on every session in this tree.
 ## What this is
 
 An AD4M link language (`@coasys/ad4m-ldk`, modern `defineLanguage()`
-pattern) that syncs a perspective through a self-hosted `adam-link-server`
+pattern) that syncs a perspective through a self-hosted `link-server`
 instance: HTTP for auth/commit/catch-up-sync/peers/ACL/E2E-key-fetch, native
 WebSocket for real-time diff push and telepresence. Implements all five
 link-language capabilities: `perspective-commit`, `perspective-sync`,
@@ -125,7 +125,7 @@ tests/*.test.ts                    — node:test + tsx, one file per pure module
   suite directly** (only indirectly, through `api.ts`/`encryption.ts` unit
   tests) — there's no `index.ts`-level integration test because `index.ts`
   requires the Deno `ad4m:host` bootstrap to exercise for real. Verify
-  those paths against a running `adam-link-server` once one exists.
+  those paths against a running `link-server` once one exists.
 
 ## Testing approach
 

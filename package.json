@@ -1,7 +1,7 @@
 {
-  "name": "@coasys/adam-server-link-language",
+  "name": "@coasys/server-link-language",
   "version": "0.1.0",
-  "description": "AD4M link language that syncs through a self-hosted adam-link-server",
+  "description": "AD4M link language that syncs through a self-hosted link-server",
   "type": "module",
   "main": "index.ts",
   "scripts": {

@@ -1,5 +1,5 @@
 /**
- * DID challenge-response authentication against adam-link-server, plus
+ * DID challenge-response authentication against link-server, plus
  * token-expiry tracking so callers can request a guaranteed-fresh JWT
  * without re-authenticating on every single call.
  */

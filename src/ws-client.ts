@@ -1,5 +1,5 @@
 /**
- * WebSocket client for the adam-link-server real-time channel
+ * WebSocket client for the link-server real-time channel
  * (`/rooms/:roomId/ws?token=<jwt>`), with auto-reconnect (exponential
  * backoff + jitter) and an outbound send queue that flushes on
  * (re)connect.
@@ -103,7 +103,7 @@ export class WsClient {
         try {
             url = await this.opts.getUrl();
         } catch (err) {
-            console.error("[adam-server-link-language] failed to resolve websocket URL:", err);
+            console.error("[server-link-language] failed to resolve websocket URL:", err);
             this.scheduleReconnect();
             return;
         }
@@ -130,7 +130,7 @@ export class WsClient {
         });
 
         conn.onError((err) => {
-            console.error("[adam-server-link-language] websocket error:", err);
+            console.error("[server-link-language] websocket error:", err);
         });
     }
 
@@ -139,7 +139,7 @@ export class WsClient {
         try {
             msg = JSON.parse(data) as ServerWsMessage;
         } catch (err) {
-            console.error("[adam-server-link-language] failed to parse websocket message:", err);
+            console.error("[server-link-language] failed to parse websocket message:", err);
             return;
         }
 
@@ -164,7 +164,7 @@ export class WsClient {
                 break;
             default:
                 console.warn(
-                    "[adam-server-link-language] unknown websocket message type:",
+                    "[server-link-language] unknown websocket message type:",
                     (msg as { type?: unknown }).type,
                 );
         }

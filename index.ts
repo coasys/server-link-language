@@ -1,8 +1,8 @@
 /**
- * # ADAM Server Link Language
+ * # Server Link Language
  *
  * AD4M link language that syncs a perspective through a self-hosted
- * `adam-link-server` instance over HTTP (auth, commit, catch-up sync,
+ * `link-server` instance over HTTP (auth, commit, catch-up sync,
  * peers, ACL, E2E key exchange) and native WebSocket (real-time diff
  * push, telepresence, presence). Implements every link-language
  * capability: perspective-commit, perspective-sync, perspective-query,
@@ -96,12 +96,12 @@ async function setupRoomKey(): Promise<void> {
         const { privateKey } = deriveX25519KeyPair((payload) => getAgent().signStringHex(payload));
         roomKey = openRoomKeyEnvelope(envelope, privateKey);
         roomKeyStatus = "ready";
-        console.log(`[adam-server-link-language] E2E room key acquired (version ${keysRes.version})`);
+        console.log(`[server-link-language] E2E room key acquired (version ${keysRes.version})`);
     } catch (err) {
         roomKeyStatus = "error";
         roomKey = null;
         console.error(
-            "[adam-server-link-language] failed to acquire/decrypt the E2E room key — " +
+            "[server-link-language] failed to acquire/decrypt the E2E room key — " +
             "refusing to commit plaintext until this resolves:",
             err,
         );
@@ -119,14 +119,14 @@ async function commitWithRetry(diff: PerspectiveDiff): Promise<void> {
         await syncModule.commit(diff);
         return;
     } catch (err) {
-        console.error("[adam-server-link-language] commit push failed, retrying once:", err);
+        console.error("[server-link-language] commit push failed, retrying once:", err);
     }
     try {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         await syncModule.commit(diff);
     } catch (err) {
         console.error(
-            "[adam-server-link-language] commit push failed after retry — link is saved locally but was " +
+            "[server-link-language] commit push failed after retry — link is saved locally but was " +
             "NOT synced to the server and will not be automatically retried.",
             err,
         );
@@ -139,7 +139,7 @@ async function commitWithRetry(diff: PerspectiveDiff): Promise<void> {
 // ---------------------------------------------------------------------------
 
 const language = defineLanguage({
-    name: "adam-server-link-language",
+    name: "server-link-language",
     version: "0.1.0",
 
     isPublic: true,
@@ -157,7 +157,7 @@ const language = defineLanguage({
         configured = !isPlaceholder(SERVER_URL) && !isPlaceholder(ROOM_ID);
         if (!configured) {
             console.log(
-                `[adam-server-link-language] init: did=${myDid}, template variables not filled in — ` +
+                `[server-link-language] init: did=${myDid}, template variables not filled in — ` +
                 "running inert until published with SERVER_URL/ROOM_ID.",
             );
             return;
@@ -206,7 +206,7 @@ const language = defineLanguage({
                     // during the connect/reconnect window before the push
                     // channel was live. Idempotent — see sync.catchUp().
                     void syncModule.catchUp().catch((err) => {
-                        console.error("[adam-server-link-language] post-connect catch-up failed:", err);
+                        console.error("[server-link-language] post-connect catch-up failed:", err);
                     });
                 },
                 onClose() {
@@ -215,7 +215,7 @@ const language = defineLanguage({
                 },
                 onReconnecting(attempt, delayMs) {
                     console.log(
-                        `[adam-server-link-language] websocket reconnecting (attempt ${attempt}) in ${Math.round(delayMs)}ms`,
+                        `[server-link-language] websocket reconnecting (attempt ${attempt}) in ${Math.round(delayMs)}ms`,
                     );
                 },
             },
@@ -229,7 +229,7 @@ const language = defineLanguage({
             await syncModule.bootstrap();
         } catch (err) {
             console.error(
-                "[adam-server-link-language] initial startup sequence failed — will keep retrying via " +
+                "[server-link-language] initial startup sequence failed — will keep retrying via " +
                 "websocket reconnect backoff and the runtime's periodic sync():",
                 err,
             );
@@ -239,7 +239,7 @@ const language = defineLanguage({
         // re-authenticates internally, and the reconnect loop retries with backoff.
         void wsClient.connect();
 
-        console.log(`[adam-server-link-language] init complete: did=${myDid}, room=${ROOM_ID}`);
+        console.log(`[server-link-language] init complete: did=${myDid}, room=${ROOM_ID}`);
     },
 
     async teardown() {
@@ -254,7 +254,7 @@ const language = defineLanguage({
         roomKeyStatus = "none";
         auth.resetAuth();
         resetAdapters();
-        console.log("[adam-server-link-language] teardown");
+        console.log("[server-link-language] teardown");
     },
 
     interactions() {
@@ -268,12 +268,12 @@ const language = defineLanguage({
         async commit(diff: PerspectiveDiff) {
             if (!configured) {
                 throw new Error(
-                    "adam-server-link-language: not configured (SERVER_URL/ROOM_ID template variables unfilled)",
+                    "server-link-language: not configured (SERVER_URL/ROOM_ID template variables unfilled)",
                 );
             }
             if (roomKeyStatus === "error") {
                 throw new Error(
-                    "adam-server-link-language: refusing to commit — this room's E2E key could not be " +
+                    "server-link-language: refusing to commit — this room's E2E key could not be " +
                     "acquired/decrypted, and sending plaintext to a possibly-encrypted room would be unsafe. " +
                     "Retry once connectivity/auth recovers.",
                 );

@@ -1,5 +1,5 @@
 /**
- * Shared types for the ADAM Server Link Language.
+ * Shared types for the Server Link Language.
  *
  * Split into two families:
  *   - AD4M-facing types (Expression, LinkExpression, PerspectiveDiff, ...)
@@ -7,7 +7,7 @@
  *     language. Kept local so pure/core modules can be imported and
  *     tested without pulling in the ad4m:host runtime.
  *   - Server-facing "wire" types describe the JSON shapes exchanged
- *     with adam-link-server over HTTP and WebSocket. When a room has
+ *     with link-server over HTTP and WebSocket. When a room has
  *     E2E encryption enabled, wire link expressions carry an opaque
  *     `encrypted` blob instead of plaintext `data` — see src/encryption.ts.
  */
@@ -115,7 +115,7 @@ export interface CommitResponse {
 
 /**
  * One entry in the `/sync` response's `diffs[]` array. The exact shape
- * adam-link-server uses for per-entry framing isn't nailed down by the
+ * link-server uses for per-entry framing isn't nailed down by the
  * spec this language was built against, so both reasonable shapes are
  * accepted and normalized in src/sync.ts:
  *   - nested:  { diff: { additions, removals }, revision?, sequence? }

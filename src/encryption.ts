@@ -22,7 +22,7 @@
  * The corresponding X25519 *public* key is computed the normal way
  * (scalar multiplication with the base point) and is safe to publish.
  * Because there is no dedicated "register my E2E public key" endpoint in
- * the adam-link-server API this language targets, the public key is
+ * the link-server API this language targets, the public key is
  * piggybacked onto the second step of the DID challenge-response auth
  * flow (see src/auth.ts) as an additive `x25519PublicKey` field — the
  * natural point where the agent already proves DID ownership to the

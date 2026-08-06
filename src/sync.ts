@@ -196,7 +196,7 @@ export async function performSync(): Promise<PerspectiveDiff> {
     try {
         return await catchUp();
     } catch (err) {
-        console.error("[adam-server-link-language] sync failed:", err);
+        console.error("[server-link-language] sync failed:", err);
         deps().emitSyncState?.("NotSynced");
         return { additions: [], removals: [] };
     }
