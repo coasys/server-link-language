@@ -1,9 +1,9 @@
 # ADAM Server Link Language
 
 An [AD4M](https://ad4m.dev) link language that syncs a perspective through a
-self-hosted **adam-link-server** instance — HTTP for auth, commit, and
-catch-up sync; a native WebSocket for real-time diff push, presence, and
-telepresence. Every AD4M link-language capability is implemented:
+self-hosted [**adam-link-server**](https://github.com/coasys/adam-link-server)
+instance — HTTP for auth, commit, and catch-up sync; a native WebSocket for
+real-time diff push, presence, and telepresence. Every AD4M link-language capability is implemented:
 `perspective-commit`, `perspective-sync`, `perspective-query`, `peers`, and
 `telepresence`. Optional end-to-end encryption protects link payloads when
 the room has E2E enabled.
@@ -30,8 +30,8 @@ npx tsc --noEmit
 
 ## The server this language talks to
 
-`adam-link-server` is a self-hosted HTTP+WebSocket server. One "room" =
-one AD4M neighbourhood.
+[`adam-link-server`](https://github.com/coasys/adam-link-server) — a
+self-hosted HTTP+WebSocket server. One "room" = one AD4M neighbourhood.
 
 ### HTTP
 
