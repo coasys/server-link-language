@@ -13,6 +13,8 @@ Built on the modern [ALDK](https://github.com/coasys/ad4m/tree/dev/ad4m-ldk)
 [`ad4m-link-language-template`](https://github.com/coasys/ad4m-link-language-template)
 for the skeleton this project extends.
 
+![Setup & Join Guide](guide.svg)
+
 ## Prerequisites
 
 - **[Deno](https://deno.land/)** (v1.32+) — the executor runtime and the build script
