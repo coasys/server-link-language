@@ -1,5 +1,8 @@
 # Server Link Language
 
+**REPO HAS MOVED**
+The Coasys link server now exists in the AD4M repo, see https://github.com/coasys/ad4m/pull/893
+
 An [AD4M](https://ad4m.dev) link language that syncs a perspective through a
 self-hosted [**link-server**](https://github.com/coasys/link-server)
 instance — HTTP for auth, commit, and catch-up sync; a native WebSocket for
